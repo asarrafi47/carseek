@@ -33,6 +33,25 @@ def init_db():
         ''')
         conn.commit()
 
+def init_cars_table():
+    with get_db_connection() as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS cars (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                make TEXT NOT NULL,
+                model TEXT NOT NULL,
+                year INTEGER NOT NULL,
+                mileage INTEGER,
+                price INTEGER,
+                location TEXT,
+                color TEXT,
+                image_url TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        conn.commit()
+
+
 # Register the dashboard blueprint
 app.register_blueprint(dashboard_bp)
 
@@ -107,3 +126,35 @@ def decrypt_text(encrypted_text):
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
+
+@app.route('/discover')
+def discover():
+    with get_db_connection() as conn:
+        cars = conn.execute('SELECT * FROM cars ORDER BY created_at DESC').fetchall()
+    return render_template('discover.html', cars=cars)
+
+@app.route('/saved')
+def saved():
+    if 'saved_cars' not in session:
+        session['saved_cars'] = []
+
+    with get_db_connection() as conn:
+        cars = conn.execute(
+            'SELECT * FROM cars WHERE id IN ({seq})'.format(seq=','.join(['?']*len(session['saved_cars']))),
+            session['saved_cars']
+        ).fetchall() if session['saved_cars'] else []
+
+    return render_template('saved.html', cars=cars)
+
+@app.route('/save_car/<int:car_id>', methods=['POST'])
+def save_car(car_id):
+    if 'saved_cars' not in session:
+        session['saved_cars'] = []
+
+    if car_id not in session['saved_cars']:
+        session['saved_cars'].append(car_id)
+        session.modified = True
+
+    flash('Car saved!', 'success')
+    return redirect(url_for('discover'))
+
