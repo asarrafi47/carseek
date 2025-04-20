@@ -4,33 +4,151 @@
     <meta charset="UTF-8">
     <title>Discover Cars</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .background {
+            background: url('{{ url_for('static', filename='car-logos-texture-background.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            filter: blur(8px);
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .discover-box {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .discover-box h2 {
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        .discover-box form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .discover-box input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .discover-box button {
+            padding: 12px;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .discover-box button:hover {
+            background-color: #2980b9;
+        }
+
+        .results {
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .car-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .car-card h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .car-card p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .car-card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .no-results {
+            margin-top: 25px;
+            color: #ccc;
+            font-size: 16px;
+        }
+    </style>
 </head>
-<body style="background-image: url('{{ url_for('static', filename='car-logos-texture-background.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;">
+<body>
 
-    <div class="container">
-        <div class="login-box">
-            <h1>Discover Cars</h1>
+<div class="background"></div>
 
-            {% for car in cars %}
-            <div class="car-card">
-                {% if car['image_url'] %}
-                <img src="{{ car['image_url'] }}" alt="Car Image" class="car-image"><br><br>
-                {% endif %}
-                <h2>{{ car['year'] }} {{ car['make'] }} {{ car['model'] }}</h2>
-                <p><strong>Price:</strong> ${{ "{:,}".format(car['price']) }}</p>
-                <p><strong>Mileage:</strong> {{ "{:,}".format(car['mileage']) }} miles</p>
-                <p><strong>Location:</strong> {{ car['location'] }}</p>
-                <p><strong>Color:</strong> {{ car['color'] }}</p>
+<div class="container">
+    <div class="discover-box">
+        <h2>Discover Cars</h2>
 
-                <form method="POST" action="{{ url_for('save_car', car_id=car['id']) }}">
-                    <button type="submit" class="save-button">Save ❤️</button>
-                </form>
-            </div>
+        <form method="POST" action="{{ url_for('discover') }}">
+            <input type="text" name="search_query" placeholder="Search cars (e.g., 'red Honda Civic under 30k')" required>
+            <button type="submit">Search</button>
+        </form>
+
+        {% if searched %}
+            {% if cars %}
+                <div class="results">
+                    {% for car in cars %}
+                        <div class="car-card">
+                            <h3>{{ car.make }} {{ car.model }}</h3>
+                            <p>Year: {{ car.year }}</p>
+                            <p>Mileage: {{ car.mileage }} miles</p>
+                            <p>Price: ${{ car.price }}</p>
+                            <p>Location: {{ car.location }}</p>
+                            {% if car.color %}
+                                <p>Color: {{ car.color }}</p>
+                            {% endif %}
+                            {% if car.image_url %}
+                                <img src="{{ car.image_url }}" alt="Car Image">
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
             {% else %}
-            <p>No cars available yet!</p>
-            {% endfor %}
-        </div>
+                <div class="no-results">No results found.</div>
+            {% endif %}
+        {% endif %}
+
     </div>
+</div>
 
 </body>
 </html>

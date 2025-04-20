@@ -2,29 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Login - CarSeek</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        #admin-password-box {
+            display: none;
+            margin-top: 10px;
+        }
+        #admin-password {
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: #fff;
+            padding: 3px;
+            width: 50px;
+            font-size: 10px;
+        }
+        #admin-button {
+            background: none;
+            border: none;
+            color: transparent;
+            cursor: pointer;
+            margin-top: 5px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 30px;
+            height: 10px;
+        }
+    </style>
+    <script>
+        function showAdminPasswordBox() {
+            document.getElementById('admin-password-box').style.display = 'block';
+        }
+        function checkAdminPassword(event) {
+            if (event.key === 'Enter') {
+                const pw = document.getElementById('admin-password').value;
+                if (pw === '1111') {
+                    fetch('/admin_login', {
+                        method: 'POST'
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/dashboard';
+                        } else {
+                            alert('Failed to login as admin.');
+                        }
+                    });
+                } else {
+                    alert('Incorrect admin code.');
+                }
+            }
+        }
+    </script>
 </head>
-<body style="background-image: url('{{ url_for('static', filename='car-logos-texture-background.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;">
+
+<body style="background-image: url('{{ url_for('static', filename='car-logos-texture-background.jpg') }}'); background-size: cover; background-position: center; background-attachment: fixed;">
 
     <div class="container">
         <div class="login-box">
             <h1>Login</h1>
-            <form method="POST">
-                <input type="text" name="username" placeholder="Username" required><br>
-                <input type="password" name="password" placeholder="Password" required><br>
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <input type="text" name="username" placeholder="Username" required><br><br>
+                <input type="password" name="password" placeholder="Password" required><br><br>
                 <button type="submit">Login</button>
             </form>
 
-            <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
+            <!-- Hidden Admin Access Button -->
+            <button id="admin-button" onclick="showAdminPasswordBox()"></button>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                {% for category, message in messages %}
-                  <div class="flash">{{ message }}</div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
+            <div id="admin-password-box">
+                <input type="password" id="admin-password" placeholder="Code" onkeypress="checkAdminPassword(event)">
+            </div>
+
         </div>
     </div>
 

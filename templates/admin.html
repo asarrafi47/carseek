@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel - CarSeek</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="background-image: url('{{ url_for('static', filename='car-logos-texture-background.jpg') }}'); background-size: cover; background-position: center; background-attachment: fixed;">
+
+    <div class="container">
+        <div class="login-box">
+            <h1>Admin Panel</h1>
+
+            <form method="POST" action="{{ url_for('admin') }}">
+                <input type="text" name="zip_code" placeholder="Enter ZIP code or city" required><br><br>
+                <button type="submit">Scrape Dealerships</button>
+            </form>
+
+            {% if success is defined %}
+                {% if success %}
+                    <p style="color:lightgreen;">✅ Successfully scraped dealerships!</p>
+                {% else %}
+                    <p style="color:red;">❌ Error. Please try again.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>

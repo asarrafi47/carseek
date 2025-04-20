@@ -1,3 +1,5 @@
 Flask
 Werkzeug
 cryptography
+beautifulsoup4
+requests
