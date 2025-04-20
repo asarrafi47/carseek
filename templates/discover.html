@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Discover Cars</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="background-image: url('{{ url_for('static', filename='car-logos-texture-background.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;">
+
+    <div class="container">
+        <div class="login-box">
+            <h1>Discover Cars</h1>
+
+            {% for car in cars %}
+            <div class="car-card">
+                {% if car['image_url'] %}
+                <img src="{{ car['image_url'] }}" alt="Car Image" class="car-image"><br><br>
+                {% endif %}
+                <h2>{{ car['year'] }} {{ car['make'] }} {{ car['model'] }}</h2>
+                <p><strong>Price:</strong> ${{ "{:,}".format(car['price']) }}</p>
+                <p><strong>Mileage:</strong> {{ "{:,}".format(car['mileage']) }} miles</p>
+                <p><strong>Location:</strong> {{ car['location'] }}</p>
+                <p><strong>Color:</strong> {{ car['color'] }}</p>
+
+                <form method="POST" action="{{ url_for('save_car', car_id=car['id']) }}">
+                    <button type="submit" class="save-button">Save ❤️</button>
+                </form>
+            </div>
+            {% else %}
+            <p>No cars available yet!</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

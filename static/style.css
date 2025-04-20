@@ -1,0 +1,110 @@
+/* GENERAL STYLES */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Background blur layer */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    backdrop-filter: blur(4px); /* Slight blur for background */
+    z-index: -1;
+}
+
+/* Centered Container */
+.container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Login/Register/Dashboard Box */
+.login-box {
+    background-color: rgba(0, 0, 0, 0.92); /* Darker black for better contrast */
+    padding: 50px;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.6); /* Slightly stronger shadow */
+}
+
+/* Car Cards Inside Discover/Saved */
+.car-card {
+    background: rgba(0, 0, 0, 0.92); /* Match the dark theme */
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: 0.3s ease;
+    text-align: left;
+}
+
+/* Hover Effect for Car Cards */
+.car-card:hover {
+    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* Car Image Styling */
+.car-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Form Input Fields */
+input[type="text"], input[type="password"] {
+    width: 92%;
+    padding: 14px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+/* Buttons (Login, Register, Save) */
+button {
+    width: 96%;
+    padding: 14px;
+    margin-top: 25px;
+    background-color: #3498db;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Links */
+a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Flash Messages (like "Logged out", etc.) */
+.flash {
+    margin-top: 15px;
+    color: red;
+    font-size: 14px;
+}
